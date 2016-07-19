@@ -1,0 +1,43 @@
+{
+  "name": "gulp-wrap-file",
+  "version": "0.0.1",
+  "description": "a gulp plugin for wrapping file content",
+  "main": "index.js",
+  "scripts": {
+    "test": "istanbul test _mocha --report html -- test/*.js --reporter spec"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Dijason/gulp-wrap-file.git"
+  },
+  "keywords": [
+    "gulp",
+    "wrap",
+    "file",
+    "amd"
+  ],
+  "author": {
+    "name": "Jason Dai",
+    "email": "daizech@gmail.com",
+    "url": "https://github.com/Dijason"
+  },
+  "license": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/Dijason/gulp-wrap-file/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">=0.10",
+    "npm": ">=1.4.3"
+  },
+  "dependencies": {
+    "gulp-util": "^3.0.7",
+    "through2": "^2.0.1"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.4",
+    "mocha": "^2.5.3",
+    "should": "^10.0.0"
+  }
+}
