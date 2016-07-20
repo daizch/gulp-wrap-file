@@ -1,6 +1,6 @@
 {
   "name": "gulp-wrap-file",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "a gulp plugin for wrapping file content",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "gulp",
     "wrap",
     "file",
-    "amd"
+    "amd",
+    "wrapper"
   ],
   "author": {
     "name": "Jason Dai",

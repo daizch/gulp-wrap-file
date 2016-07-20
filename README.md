@@ -46,6 +46,32 @@ gulp.src("./src/**/*.js")
     .pipe(gulp.dest("build"));
 ```
 
+## example
+
+### input
+
+```javascript
+//input.js
+function foo() { console.log("hello world"); }
+```
+
+### gulpfile.js
+
+```javascript
+var wrap = require("gulp-wrap-file");
+
+gulp.src("input.js")
+    .pipe(wrap({wrapper: 'define("demo/{modName}",function((require, exports, module){ {file} }));'}))
+    .pipe(gulp.dest("build"));
+```
+
+
+### output
+
+```javascript
+define("demo/input",function((require, exports, module){ function foo() { console.log("hello world"); } }));
+```
+
 ## Parameters
 
 ### type

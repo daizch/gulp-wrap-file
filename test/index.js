@@ -2,11 +2,12 @@ var wrapper = require('../');
 var gutil = require('gulp-util');
 var fs = require('fs');
 var pjoin = require('path').join;
-var path = require('path');
 var should = require('should');
+var File = require('vinyl');
+
 require('mocha');
 
-describe('gulp test', function () {
+describe('gulp-wrap-file', function () {
     it('test amd wrapper', function (done) {
 
         var fakeFilePath = pjoin(process.cwd(), '/test/fixtures/file.js');
@@ -26,11 +27,6 @@ describe('gulp test', function () {
             });
 
         stream.on('data', function (file) {
-            var fp = file.path;
-            var dirname = process.cwd();
-            var extname = path.extname(fp);
-
-            file.modName.should.eql(fp.replace(dirname + '/', '').replace(extname, ''));
             file.contents.toString().should.eql(String(fs.readFileSync(fakeFilePath)));
         });
 
@@ -40,5 +36,62 @@ describe('gulp test', function () {
 
         stream.write(fakeFile);
         stream.end();
-    })
+    });
+
+    it('test wrapper with module name', function (done) {
+        var stream = wrapper({
+            wrapper: 'define({modName}, {file});'
+        });
+        var content = 'function(){console.log("hello world")}'
+
+        stream.on('data', function (file) {
+            file.modName.should.eql(file.modName);
+        });
+
+        stream.once('end', function () {
+            done();
+        });
+
+        stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
+        stream.end();
+    });
+
+    it('test wrapper with file', function (done) {
+        var stream = wrapper({
+            wrapper: 'define({file})'
+        });
+
+        var content = 'function(){console.log("hello world")}'
+        stream.on('data', function (file) {
+            file.contents.toString().should.eql('define(function(){console.log("hello world")})');
+        });
+
+        stream.once('end', function () {
+            done();
+        });
+
+        stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
+        stream.end();
+    });
+
+    it('test wrapper with function', function (done) {
+        var stream = wrapper({
+            wrapper: function(fileContent, filepath) {
+                var result = 'module.exports = ' +  fileContent;
+                return result;
+            }
+        });
+
+        var content = 'function(){console.log("hello world")}'
+        stream.on('data', function (file) {
+            file.contents.toString().should.eql('module.exports = function(){console.log("hello world")}');
+        });
+
+        stream.once('end', function () {
+            done();
+        });
+
+        stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
+        stream.end();
+    });
 });
