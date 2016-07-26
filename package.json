@@ -1,6 +1,6 @@
 {
   "name": "gulp-wrap-file",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "a gulp plugin for wrapping file content",
   "main": "index.js",
   "scripts": {

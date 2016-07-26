@@ -76,7 +76,7 @@ describe('gulp-wrap-file', function () {
 
     it('test wrapper with function', function (done) {
         var stream = wrapper({
-            wrapper: function(fileContent, filepath) {
+            wrapper: function(fileContent, file) {
                 var result = 'module.exports = ' +  fileContent;
                 return result;
             }

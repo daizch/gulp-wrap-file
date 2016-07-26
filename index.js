@@ -35,7 +35,7 @@ module.exports = function (opt) {
 
         file.modName = modName;
         if (typeof opt.wrapper === 'function') {
-            content = opt.wrapper(content, file.path);
+            content = opt.wrapper(content, file);
         } else if (typeof opt.wrapper === 'string') {
             content = opt.wrapper.replace('{file}', content).replace('{modName}', modName);
         }

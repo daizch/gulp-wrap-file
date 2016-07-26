@@ -65,6 +65,18 @@ gulp.src("input.js")
     .pipe(gulp.dest("build"));
 ```
 
+same to the wrapper for function
+
+```javascript
+var wrap = require("gulp-wrap-file");
+
+gulp.src("input.js")
+    .pipe(wrap({wrapper: function(content, file){
+        return 'define("demo/'+file.modName+'",function((require, exports, module){ '+content+' }));'
+    }}))
+    .pipe(gulp.dest("build"));
+```
+
 
 ### output
 
@@ -84,7 +96,7 @@ Type: `String` or `Function`
 
 The file wrapper to wrap your file content. You can get the file content and the pathname of the file.
 If wrapper is string, file content names `{file}`, short pathname of the file names `{modName}`.
-If wrapper is function, the arguments of the function are content of the file and the entire path of the file.
+If wrapper is function, the arguments of the function are content of the file and the file object.
 
 ## License
 
