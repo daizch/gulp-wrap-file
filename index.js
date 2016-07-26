@@ -13,6 +13,7 @@ const WRAPPER = {
 module.exports = function (opt) {
     var CWD = process.cwd();
     opt = opt || {};
+    var truncatePrefixLen = opt.truncatePrefixLen || 0;
 
     if (opt.type) {
         opt.wrapper = WRAPPER[opt.type];
@@ -30,10 +31,20 @@ module.exports = function (opt) {
 
         var content = file.contents.toString();
         var fp = file.path;
-        var extname = path.extname(fp);
-        var modName = fp.replace(CWD + '/', '').replace(extname, '');
+        var extname;
+        var modName;
 
-        file.modName = modName;
+        if (opt.nameReplacer) {
+            file.modName = opt.nameReplacer(file.path);
+        } else {
+            extname = path.extname(fp);
+            modName = fp.replace(CWD + '/', '').replace(extname, '');
+
+            if (truncatePrefixLen > 0) {
+                modName = modName.split('/').slice(truncatePrefixLen).join('/');
+            }
+            file.modName = modName;
+        }
         if (typeof opt.wrapper === 'function') {
             content = opt.wrapper(content, file);
         } else if (typeof opt.wrapper === 'string') {

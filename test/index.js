@@ -94,4 +94,44 @@ describe('gulp-wrap-file', function () {
         stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
         stream.end();
     });
+
+    it('test nameReplacer', function (done) {
+        var stream = wrapper({
+            type: 'amd',
+            nameReplacer: function (p) {
+                return 'prefix/'+p;
+            }
+        });
+
+        var content = 'function(){console.log("hello world")}'
+        stream.on('data', function (file) {
+            file.modName.should.eql('prefix/path/to/test.js');
+        });
+
+        stream.once('end', function () {
+            done();
+        });
+
+        stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
+        stream.end();
+    });
+
+    it('test truncatePrefixLen', function (done) {
+        var stream = wrapper({
+            type: 'amd',
+            truncatePrefixLen: 1
+        });
+
+        var content = 'function(){console.log("hello world")}'
+        stream.on('data', function (file) {
+            file.modName.should.eql('to/test');
+        });
+
+        stream.once('end', function () {
+            done();
+        });
+
+        stream.write(new File({path: 'path/to/test.js', contents: new Buffer(content)}));
+        stream.end();
+    });
 });

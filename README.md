@@ -98,6 +98,17 @@ The file wrapper to wrap your file content. You can get the file content and the
 If wrapper is string, file content names `{file}`, short pathname of the file names `{modName}`.
 If wrapper is function, the arguments of the function are content of the file and the file object.
 
+### truncatePrefixLen
+Type: `Number`
+
+To truncate the name of the module prefix. For example, if the module name is path/to/foo. The value of truncatePrefixLen is 1, then the result will be to/foo.
+
+
+### nameReplacer
+Type: `Function`
+
+To handle the module name to what you want. With the config of nameReplacer, truncatePrefixLen will be disabled.
+
 ## License
 
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
