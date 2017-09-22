@@ -10,3 +10,4 @@ npm-debug.log
 *.gz
 logs
 npm-debug.log.*
+.DS_Store
