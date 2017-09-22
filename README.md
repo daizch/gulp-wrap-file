@@ -1,7 +1,7 @@
 # gulp-wrap
 
 [![NPM version](https://img.shields.io/npm/v/gulp-wrap-file.svg?style=flat)](https://www.npmjs.com/package/gulp-wrap-file)
-[![Build Status](https://secure.travis-ci.org/Dijason/gulp-wrap-file.svg?branch=master)](http://travis-ci.org/Dijason/gulp-wrap-file)
+[![Build Status](https://secure.travis-ci.org/daizch/gulp-wrap-file.svg?branch=master)](http://travis-ci.org/daizch/gulp-wrap-file)
 
 > A [gulp](https://github.com/gulpjs/gulp) plugin to wrap a file contents.
 

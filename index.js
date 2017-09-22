@@ -1,8 +1,9 @@
-var through2 = require('through2');
-var gutil = require('gulp-util');
-var path = require('path');
-
-var PluginError = gutil.PluginError;
+const through2 = require('through2');
+const gutil = require('gulp-util');
+const path = require('path');
+const SEP = path.sep;
+const PluginError = gutil.PluginError;
+const CWD = process.cwd();
 
 const WRAPPER = {
     'amd': 'define("{modName}", function(require, exports, module){' +
@@ -11,7 +12,6 @@ const WRAPPER = {
 };
 
 module.exports = function (opt) {
-    var CWD = process.cwd();
     opt = opt || {};
     var truncatePrefixLen = opt.truncatePrefixLen || 0;
 
@@ -38,10 +38,10 @@ module.exports = function (opt) {
             file.modName = opt.nameReplacer(file.path);
         } else {
             extname = path.extname(fp);
-            modName = fp.replace(CWD + '/', '').replace(extname, '');
+            modName = fp.replace(CWD + SEP, '').replace(extname, '');
 
             if (truncatePrefixLen > 0) {
-                modName = modName.split('/').slice(truncatePrefixLen).join('/');
+                modName = modName.split(SEP).slice(truncatePrefixLen).join(SEP);
             }
             file.modName = modName;
         }
