@@ -6,53 +6,50 @@ const PluginError = gutil.PluginError;
 const CWD = process.cwd();
 
 const WRAPPER = {
-    'amd': 'define("{modName}", function(require, exports, module){' +
-    '{file}' +
-    '});'
+  amd: 'define("{modName}", function(require, exports, module){' + '{file}' + '});',
 };
 
 module.exports = function (opt) {
-    opt = opt || {};
-    var truncatePrefixLen = opt.truncatePrefixLen || 0;
+  opt = opt || {};
+  var truncatePrefixLen = opt.truncatePrefixLen || 0;
 
-    if (opt.type) {
-        opt.wrapper = WRAPPER[opt.type];
+  if (opt.type) {
+    opt.wrapper = WRAPPER[opt.type];
+  }
+
+  return through2.obj(function (file, enc, callback) {
+    if (file.isNull()) {
+      return callback(null, file);
     }
 
-    return through2.obj(function (file, enc, callback) {
+    if (file.isStream()) {
+      return callback(new PluginError('gulp-wrapper', 'stream is not supported'), file);
+    }
 
-        if (file.isNull()) {
-            return callback(null, file);
-        }
+    var content = file.contents.toString();
+    var fp = file.path;
+    var extname;
+    var modName;
 
-        if (file.isStream()) {
-            return callback(new PluginError('gulp-wrapper', 'stream is not supported'), file);
-        }
+    if (opt.nameReplacer) {
+      file.modName = opt.nameReplacer(file.path);
+    } else {
+      extname = path.extname(fp);
+      modName = fp.replace(CWD + SEP, '').replace(extname, '');
 
-        var content = file.contents.toString();
-        var fp = file.path;
-        var extname;
-        var modName;
+      if (truncatePrefixLen > 0) {
+        modName = modName.split(SEP).slice(truncatePrefixLen).join(SEP);
+      }
+      file.modName = modName;
+    }
+    if (typeof opt.wrapper === 'function') {
+      content = opt.wrapper(content, file);
+    } else if (typeof opt.wrapper === 'string') {
+      content = opt.wrapper.replace('{file}', content).replace('{modName}', file.modName);
+    }
 
-        if (opt.nameReplacer) {
-            file.modName = opt.nameReplacer(file.path);
-        } else {
-            extname = path.extname(fp);
-            modName = fp.replace(CWD + SEP, '').replace(extname, '');
+    file.contents = new Buffer(content);
 
-            if (truncatePrefixLen > 0) {
-                modName = modName.split(SEP).slice(truncatePrefixLen).join(SEP);
-            }
-            file.modName = modName;
-        }
-        if (typeof opt.wrapper === 'function') {
-            content = opt.wrapper(content, file);
-        } else if (typeof opt.wrapper === 'string') {
-            content = opt.wrapper.replace('{file}', content).replace('{modName}', modName);
-        }
-
-        file.contents = new Buffer(content);
-
-        callback(null, file);
-    });
+    callback(null, file);
+  });
 };
